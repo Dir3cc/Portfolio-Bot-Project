@@ -3,12 +3,16 @@ from discord.ext import commands
 from logic import DB_Manager
 from config import DATABASE, TOKEN
 
+# Gerekli kütüphanelerin yüklenmesi ve botun başlatılması için gerekli ayarların yapılması
+
 intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 manager = DB_Manager(DATABASE)
+
+# Bot hazır olduğunda çalışacak olan event ve botun komutları için kullanılan fonksiyon
 
 @bot.event
 async def on_ready():
@@ -18,6 +22,8 @@ async def on_ready():
 async def start_command(ctx):
     await ctx.send("Merhaba! Ben bir proje yöneticisi botuyum.\nProjelerinizi ve onlara dair tüm bilgileri saklamanıza yardımcı olacağım! =)")
     await info(ctx)
+
+# Botun komutları ve kullanıcıya sunulan bilgiler için kullanılan fonksiyonlar
 
 @bot.command(name='info')
 async def info(ctx):
@@ -59,6 +65,8 @@ async def new_project(ctx):
     manager.insert_project([tuple(data)])
     await ctx.send("Proje kaydedildi")
 
+#BURAYI ANLAMADIM
+
 @bot.command(name='projects')
 async def get_projects(ctx):
     user_id = ctx.author.id
@@ -68,6 +76,7 @@ async def get_projects(ctx):
         await ctx.send(text)
     else:
         await ctx.send('Henüz herhangi bir projeniz yok!\nBir tane eklemeyi düşünün! !new_project komutunu kullanabilirsiniz.')
+
 
 @bot.command(name='skills')
 async def skills(ctx):
@@ -99,6 +108,7 @@ async def skills(ctx):
         await ctx.send(f'{skill.content} becerisi {project_name.content} projesine eklendi')
     else:
         await ctx.send('Henüz herhangi bir projeniz yok!\nBir tane eklemeyi düşünün! !new_project komutunu kullanabilirsiniz.')
+# Komutları ve çalışma işlevlerini tanımlayan fonksiyonlar. Kullanıcıdan gelen mesajları bekler ve uygun yanıtları verir.
 
 @bot.command(name='delete')
 async def delete_project(ctx):
@@ -122,6 +132,8 @@ async def delete_project(ctx):
         await ctx.send(f'{project_name.content} projesi veri tabanından silindi!')
     else:
         await ctx.send('Henüz herhangi bir projeniz yok!\nBir tane eklemeyi düşünün! !new_project komutunu kullanabilirsiniz.')
+
+# DELETE VE NEW_PROJECT KOMUTLARINI TANIMLAYAN FONKSİYONLAR. KULLANICIDAN GELEN MESAJLARI BEKLER VE UYGUN YANITLARI VERİR.
 
 @bot.command(name='update_projects')
 async def update_projects(ctx):
@@ -167,5 +179,7 @@ async def update_projects(ctx):
         await ctx.send("Tüm işlemler tamamlandı! Proje güncellendi!")
     else:
         await ctx.send('Henüz herhangi bir projeniz yok!\nBir tane eklemeyi düşünün! !new_project komutunu kullanabilirsiniz.')
+
+# Botu başlatmak için token ve botun durumu ve projede neyi değiştirmek istersiniz kısmının girişi ve BOT.RUN ile botun başlatılması
 
 bot.run(TOKEN)
