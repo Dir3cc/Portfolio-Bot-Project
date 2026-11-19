@@ -125,9 +125,26 @@ WHERE project_name=? AND user_id=?
         sql = """DELETE FROM skills WHERE skill_id = ? AND project_id = ? """
         self.__executemany(sql, [(skill_id, project_id)])
 
+    def add_description_column(self):
+        sql = "ALTER TABLE projects ADD COLUMN description TEXT"
+        conn = sqlite3.connect(self.database)
+        with conn:
+            conn.execute(sql)
+            conn.commit()
+
+    def update_project_screenshot(self, project_name, user_id, screenshot_value):
+        sql = "UPDATE projects SET screenshot = ? WHERE project_name = ? AND user_id = ?"
+        self.__executemany(sql, [(screenshot_value, project_name, user_id)])
+
 
 if __name__ == '__main__':
     manager = DB_Manager(DATABASE)
     manager.default_insert()
     manager.insert_project([(1, 'My First Project', 'https://example.com', 1)])
     # Yöntemlerinizi burada test edin!
+    manager.add_description_column()
+    try:
+        manager.insert_project([(1, 'Kedi Köpek Projesi', 'https://example.com', 1)])
+    except:
+        pass
+    manager.update_project_screenshot('Kedi Köpek Projesi', 1, 'köpek_fotosu.jpg')
