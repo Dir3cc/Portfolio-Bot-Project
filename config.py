@@ -1,3 +1,3 @@
 # config.py
-TOKEN = 'BURAYA_BOT_TOKENIN'
+TOKEN = 'X'
 DATABASE = 'mydatabase.db'
